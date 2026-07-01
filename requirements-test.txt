@@ -12,3 +12,4 @@ bluetooth-data-tools
 dbus-fast
 habluetooth
 pyserial
+pyudev
