@@ -36,7 +36,7 @@ class FlipperDetectedBinarySensor(HomeOfFlippersBaseEntity, BinarySensorEntity):
 
 class AttackDetectedBinarySensor(HomeOfFlippersBaseEntity, BinarySensorEntity):
     _attr_name = "BLE Attack Detected"
-    _attr_icon = "mdi:bluetooth-alert"
+    _attr_icon = "mdi:shield-alert"
     _attr_device_class = BinarySensorDeviceClass.SAFETY
 
     def __init__(self, entry) -> None:

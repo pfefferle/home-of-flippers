@@ -38,7 +38,7 @@ class FlippersNearbySensor(HomeOfFlippersBaseEntity, SensorEntity):
 
 class AttacksPerMinuteSensor(HomeOfFlippersBaseEntity, SensorEntity):
     _attr_name = "BLE Attacks per Minute"
-    _attr_icon = "mdi:bluetooth-alert"
+    _attr_icon = "mdi:shield-alert"
     _attr_state_class = SensorStateClass.MEASUREMENT
     _attr_native_unit_of_measurement = "attacks/min"
 
@@ -53,7 +53,7 @@ class AttacksPerMinuteSensor(HomeOfFlippersBaseEntity, SensorEntity):
 
 class LastAttackTypeSensor(HomeOfFlippersBaseEntity, SensorEntity):
     _attr_name = "Last Attack Type"
-    _attr_icon = "mdi:bluetooth-alert"
+    _attr_icon = "mdi:shield-alert"
 
     def __init__(self, entry) -> None:
         super().__init__(entry)

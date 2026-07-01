@@ -23,7 +23,7 @@ class BleAttackEvent(EventEntity):
     _attr_has_entity_name = True
     _attr_should_poll = False
     _attr_name = "BLE Attack"
-    _attr_icon = "mdi:bluetooth-alert"
+    _attr_icon = "mdi:shield-alert"
     _attr_device_class = EventDeviceClass.MOTION
     _attr_event_types = list(ATTACK_TYPES)
 
