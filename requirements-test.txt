@@ -1,2 +1,14 @@
 pytest-homeassistant-custom-component
+
+# Runtime deps of the Home Assistant components we depend on (bluetooth -> usb).
+# pytest-homeassistant-custom-component installs HA core but not per-component
+# requirements, so the integration cannot set up without these.
+aiousbwatcher
+bleak
+bleak-retry-connector
+bluetooth-adapters
+bluetooth-auto-recovery
+bluetooth-data-tools
+dbus-fast
+habluetooth
 pyserial
