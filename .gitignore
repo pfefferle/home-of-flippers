@@ -5,3 +5,7 @@ __pycache__/
 venv/
 *.egg-info/
 .coverage
+
+# Local tooling / agent scaffolding — not part of the integration
+.claude/
+docs/superpowers/
