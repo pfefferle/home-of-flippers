@@ -14,8 +14,8 @@ Inspired by [Wall of Flippers](https://github.com/k3yomi/Wall-of-Flippers) by Ki
 ## Installation (HACS)
 
 1. HACS → Integrations → ⋮ → Custom repositories → add this repo as an **Integration**.
-2. Install **Wall of Flippers**, restart Home Assistant.
-3. Settings → Devices & Services → Add Integration → **Wall of Flippers**.
+2. Install **Home of Flippers**, restart Home Assistant.
+3. Settings → Devices & Services → Add Integration → **Home of Flippers**.
 
 ## Entities
 
@@ -26,8 +26,8 @@ Inspired by [Wall of Flippers](https://github.com/k3yomi/Wall-of-Flippers) by Ki
 
 ## Events (for automations)
 
-- `wall_of_flippers_flipper_detected` — `{address, name, variant, detection_type, rssi, source}`
-- `wall_of_flippers_attack_detected` — `{attack_type, matched_signature, address, rssi, source}`
+- `home_of_flippers_flipper_detected` — `{address, name, variant, detection_type, rssi, source}`
+- `home_of_flippers_attack_detected` — `{attack_type, matched_signature, address, rssi, source}`
 
 ## Options
 
