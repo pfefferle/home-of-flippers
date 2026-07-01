@@ -8,7 +8,7 @@ from homeassistant.helpers.dispatcher import async_dispatcher_connect
 from homeassistant.helpers.entity_platform import AddEntitiesCallback
 
 from .const import ATTACK_TYPES, DOMAIN, SIGNAL_ATTACK
-from .detection import AttackHit
+from .detection import AttackHit, humanize_attack_type
 
 
 async def async_setup_entry(
@@ -25,7 +25,7 @@ class BleAttackEvent(EventEntity):
     _attr_name = "BLE Attack"
     _attr_icon = "mdi:shield-alert"
     _attr_device_class = EventDeviceClass.MOTION
-    _attr_event_types = list(ATTACK_TYPES)
+    _attr_event_types = [humanize_attack_type(t) for t in ATTACK_TYPES]
 
     def __init__(self, entry) -> None:
         self._entry = entry
@@ -45,8 +45,9 @@ class BleAttackEvent(EventEntity):
     @callback
     def _on_attack(self, hit: AttackHit, source: str | None) -> None:
         self._trigger_event(
-            hit.attack_type,
+            humanize_attack_type(hit.attack_type),
             {
+                "attack_type": hit.attack_type,
                 "matched_signature": hit.matched_signature,
                 "address": hit.address,
                 "rssi": hit.rssi,

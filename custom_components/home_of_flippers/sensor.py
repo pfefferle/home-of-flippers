@@ -6,6 +6,7 @@ from homeassistant.core import HomeAssistant
 import homeassistant.util.dt as dt_util
 from homeassistant.helpers.entity_platform import AddEntitiesCallback
 
+from .detection import humanize_attack_type
 from .entity import HomeOfFlippersBaseEntity
 
 
@@ -61,4 +62,4 @@ class LastAttackTypeSensor(HomeOfFlippersBaseEntity, SensorEntity):
 
     @property
     def native_value(self) -> str:
-        return self._detector.last_attack_type or "none"
+        return humanize_attack_type(self._detector.last_attack_type)

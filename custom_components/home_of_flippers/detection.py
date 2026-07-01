@@ -39,6 +39,18 @@ class AttackHit:
     rssi: int
 
 
+def humanize_attack_type(attack_type: str | None) -> str:
+    """Turn an internal attack-type constant into a human-readable label.
+
+    e.g. "BLE_LOVE_TOYS_SHORT_DISTANCE" -> "Love Toys Short Distance".
+    Internal constants must never surface directly in the frontend.
+    """
+    if not attack_type:
+        return "None"
+    label = attack_type[4:] if attack_type.startswith("BLE_") else attack_type
+    return label.replace("_", " ").title() or attack_type
+
+
 def _short_uuid_le(uuid: str) -> str | None:
     """Return little-endian 16-bit hex for a base-suffixed UUID, else None."""
     uuid = uuid.lower()

@@ -32,5 +32,6 @@ async def test_attack_event_fires(hass: HomeAssistant):
     await hass.async_block_till_done()
 
     state = hass.states.get("event.home_of_flippers_ble_attack")
-    assert state.attributes["event_type"] == "BLE_WINDOWS_SWIFT_PAIR_SHORT"
+    assert state.attributes["event_type"] == "Windows Swift Pair Short"
+    assert state.attributes["attack_type"] == "BLE_WINDOWS_SWIFT_PAIR_SHORT"
     assert state.attributes["address"] == "aa:bb:cc:dd:ee:ff"
