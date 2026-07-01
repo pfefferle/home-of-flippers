@@ -1,0 +1,13 @@
+{
+  "domain": "home_of_flippers",
+  "name": "Home of Flippers",
+  "codeowners": ["@pfefferle"],
+  "config_flow": true,
+  "dependencies": ["bluetooth"],
+  "documentation": "https://github.com/pfefferle/home-of-flippers",
+  "integration_type": "hub",
+  "iot_class": "local_push",
+  "issue_tracker": "https://github.com/pfefferle/home-of-flippers/issues",
+  "requirements": [],
+  "version": "0.1.0"
+}

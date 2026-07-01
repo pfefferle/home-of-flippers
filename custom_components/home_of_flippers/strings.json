@@ -1,0 +1,27 @@
+{
+  "config": {
+    "step": {
+      "user": {
+        "description": "Home of Flippers listens to BLE advertisements (including those relayed by Bluetooth proxies) to detect nearby Flipper Zero devices and BLE spam attacks."
+      }
+    },
+    "abort": {
+      "single_instance_allowed": "Home of Flippers is already configured. Only one instance is allowed."
+    }
+  },
+  "options": {
+    "step": {
+      "init": {
+        "title": "Home of Flippers options",
+        "data": {
+          "rssi_floor": "Minimum RSSI (dBm) to consider",
+          "stale_timeout": "Seconds before a Flipper is considered away",
+          "attack_window": "Seconds an attack stays flagged as active",
+          "enable_attack_detection": "Enable BLE attack detection",
+          "rate_limit_count": "New Flippers per window before spoof-flood is assumed",
+          "rate_limit_window": "Rate-limit window (seconds)"
+        }
+      }
+    }
+  }
+}
