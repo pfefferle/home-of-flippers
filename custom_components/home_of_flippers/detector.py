@@ -87,19 +87,32 @@ class HomeOfFlippersDetector:
             }
             if self._on_new_flipper is not None:
                 self._on_new_flipper(flipper, source)
+            # A new Flipper changes the aggregate count: refresh entity state.
+            self._emit()
         else:
+            # Routine re-sighting: update bookkeeping but do NOT write entity
+            # state. A present Flipper re-advertises several times per second
+            # and the aggregate values are unchanged, so emitting here would
+            # only flood the recorder. The 15s expire tick keeps things fresh.
             record = self.live_flippers[flipper.address]
             record["info"] = flipper
             record["last_seen"] = now
             record["source"] = source
-        self._changed()
 
     def _handle_attack(self, hit: AttackHit, source: str | None, now: float) -> None:
+        was_active = self.attack_active(now)
+        prev_type = self._last_attack_type
         self._attacks.append((now, hit))
         self._last_attack_type = hit.attack_type
         if self._on_attack is not None:
+            # Per-hit signal for the event entity, bus event and automations.
             self._on_attack(hit, source)
-        self._changed()
+        # Refresh aggregate entity state only on a meaningful transition: the
+        # attack window opening, or a different attack type. A same-type flood
+        # would otherwise rewrite state on every advertisement; the rolling
+        # rate/window sensors are instead refreshed by the expire tick.
+        if not was_active or self._last_attack_type != prev_type:
+            self._emit()
 
     # --- expiry --------------------------------------------------------------
     def expire(self, now: float) -> None:
@@ -112,12 +125,17 @@ class HomeOfFlippersDetector:
         ]
         for mac in removed:
             del self.live_flippers[mac]
+        had_attacks = bool(self._attacks)
         while self._attacks and now - self._attacks[0][0] > 60:
             self._attacks.popleft()
-        if removed:
-            self._changed()
+        # Bounded (~1 write / tick) refresh while there is live state to keep
+        # current: a Flipper present (its tracker rssi/last_seen), a Flipper
+        # dropped out, or the rolling attack rate/window still counting (or just
+        # emptied). Stays silent when fully idle so we never write for nothing.
+        if removed or self.live_flippers or self._attacks or had_attacks:
+            self._emit()
 
-    def _changed(self) -> None:
+    def _emit(self) -> None:
         if self._on_change is not None:
             self._on_change()
 

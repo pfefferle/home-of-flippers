@@ -97,6 +97,50 @@ def test_attack_detection_and_window():
     assert det.attack_active(now=2000.0 + 61) is False
 
 
+def test_repeat_sighting_does_not_rewrite_state():
+    # A present Flipper re-advertises constantly; only the first sighting
+    # (which changes the count) should write aggregate entity state.
+    changes = []
+    det = HomeOfFlippersDetector(OPTIONS, on_change=lambda: changes.append(True))
+    flipper = _flipper("11:22:33:44:55:66")
+    det.process(flipper, now=1000.0)
+    det.process(flipper, now=1000.5)
+    det.process(flipper, now=1001.0)
+    assert det.flipper_count == 1
+    assert len(changes) == 1
+
+
+def test_attack_flood_throttles_aggregate_writes():
+    # Every advertisement is reported per-hit (event/automations), but the
+    # aggregate state is written only once when the attack window opens.
+    changes, hits = [], []
+    det = HomeOfFlippersDetector(
+        OPTIONS,
+        on_change=lambda: changes.append(True),
+        on_attack=lambda hit, src: hits.append(hit),
+    )
+    info = FakeInfo(manufacturer_data={0x0006: bytes.fromhex("030080aabbcc")})
+    det.process(info, now=2000.0)
+    det.process(info, now=2000.5)
+    det.process(info, now=2001.0)
+    assert len(hits) == 3
+    assert len(changes) == 1
+
+
+def test_expire_refreshes_while_window_open_and_is_silent_when_idle():
+    changes = []
+    det = HomeOfFlippersDetector(OPTIONS, on_change=lambda: changes.append(True))
+    # Idle tick: nothing to refresh.
+    det.expire(now=100.0)
+    assert changes == []
+    # Attack opens the window, then a tick while it is still active refreshes.
+    info = FakeInfo(manufacturer_data={0x0006: bytes.fromhex("030080aabbcc")})
+    det.process(info, now=2000.0)
+    before = len(changes)
+    det.expire(now=2005.0)
+    assert len(changes) > before
+
+
 def test_attack_detection_can_be_disabled():
     opts = dict(OPTIONS, **{CONF_ENABLE_ATTACK_DETECTION: False})
     det = HomeOfFlippersDetector(opts)
